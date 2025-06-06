@@ -1,6 +1,4 @@
-# Use uma imagem base oficial do Node.js
-FROM node:18-slim
-
+# Versão 3 - Com limpeza de cache para otimizar o uso de recursos
 # Instala as dependências necessárias para o Puppeteer/Chromium
 RUN apt-get update && apt-get install -y \
     gconf-service \
@@ -43,20 +41,6 @@ RUN apt-get update && apt-get install -y \
     wget \
     libdrm2 \
     libgbm1 \
-    --no-install-recommends
-
-# Define o diretório de trabalho dentro do contêiner
-WORKDIR /app
-
-# Copia os arquivos de gerenciamento de pacotes
-COPY package.json ./
-COPY package-lock.json ./
-
-# Instala as dependências do projeto, incluindo puppeteer
-RUN npm install --omit=dev && npm install puppeteer
-
-# Copia o resto do código do seu bot para o diretório de trabalho
-COPY . .
-
-# Define o comando para iniciar o bot quando o contêiner rodar
-CMD ["node", "index.js"]
+    --no-install-recommends \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
