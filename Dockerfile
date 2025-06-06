@@ -1,8 +1,7 @@
-# Passo 1: Use uma imagem base oficial do Node.js
+# Use uma imagem base oficial do Node.js
 FROM node:18-slim
 
-# Passo 2: Instale as dependências de sistema necessárias para o Chromium
-# A lista está em ordem alfabética para facilitar a leitura.
+# Instala as dependências de sistema necessárias para o Chromium
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     fonts-liberation \
@@ -48,19 +47,22 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-# Passo 3: Defina o diretório de trabalho dentro do ambiente
+# Define o diretório de trabalho dentro do ambiente
 WORKDIR /app
 
-# Passo 4: Copie os arquivos de dependência para aproveitar o cache do Docker
+# Copia os arquivos de dependência
 COPY package.json ./
 COPY package-lock.json ./
 
-# Passo 5: Instale as dependências do Node.js e o Puppeteer
-# 'npm ci' é geralmente mais rápido e confiável para builds do que 'npm install'
-RUN npm ci && npm install puppeteer
+# Instala as dependências do Node.js e o Puppeteer
+RUN npm ci && npm install whatsapp-web.js@1.23.0 qrcode-terminal puppeteer
 
-# Passo 6: Copie o resto do código do seu bot
+# Copia o resto do código do seu bot
 COPY . .
 
-# Passo 7: Defina o comando para iniciar o bot
+# --- PASSO DE DEPURAÇÃO ADICIONADO ---
+# Lista os arquivos dentro de /app para vermos o que foi copiado.
+RUN ls -la /app
+
+# Define o comando para iniciar o bot
 CMD ["node", "index.js"]
