@@ -41,6 +41,8 @@ RUN apt-get update && apt-get install -y \
     lsb-release \
     xdg-utils \
     wget \
+    libdrm2 \
+    libgbm1 \
     --no-install-recommends
 
 # Define o diretório de trabalho dentro do contêiner
